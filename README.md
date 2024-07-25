@@ -10,7 +10,7 @@ The codebase is organized into separate folders for each social media platform:
 - instagram/
 - tikTok/
 - linkedin/
-- xcom/
+- x/
 
 ## How to Use
 Below are instructions on how to run the scripts for each platform. Ensure that you have Python installed and the necessary libraries required by the scripts. Replace placeholders (e.g., <name_of_the_handle>) with actual values. Also, please make sure to replace the variable **api_key** with your key when in production.
@@ -85,8 +85,8 @@ python tiktokAPI_posts.py <tiktok_handle> <number_of_posts> <from_day> <from_mon
 python tiktokAPI_posts.py babyariel 10 07 01 2024
 ```
 
-### Xcom
-Navigate to the xcom/ directory to run these scripts.
+### X.com
+Navigate to the x/ directory to run these scripts.
 
 #### Profile Scraping
 ```
