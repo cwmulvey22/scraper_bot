@@ -90,7 +90,7 @@ if __name__ == "__main__":
     if len(sys.argv) < 6:
         print("Usage: python script.py <channel_id> <num_of_posts> <from_day> <from_month> <from_year> <until_day> <until_month> <until_year>")
         sys.exit(1)
-    api_key = "2b6bcd93-0b81-4e63-9fc3-16fa22c2baef"
+    api_key = "7e4fe84a-14b3-4be5-b82c-4f2432600c58"
     channel_id = sys.argv[1]
     num_of_posts = int(sys.argv[2])
     from_date = f"{sys.argv[3]} {sys.argv[4]} {sys.argv[5]}"

@@ -62,7 +62,7 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python script.py <post_id>")
         sys.exit(1)
-    api_key = "2b6bcd93-0b81-4e63-9fc3-16fa22c2baef"
+    api_key = "7e4fe84a-14b3-4be5-b82c-4f2432600c58"
     post_id = sys.argv[1]
     fetcher = XComPostDataFetcher(api_key, post_id)
     
