@@ -7,12 +7,10 @@ import sys
 import subprocess
 
 class TiktokPostDataFetcher:
-    def __init__(self, api_key, tiktok_handle, num_of_posts, from_date, until_date):
+    def __init__(self, api_key, tiktok_handle, num_of_posts):
         self.api_key = api_key
         self.tiktok_handle = tiktok_handle
         self.num_of_posts = num_of_posts
-        self.from_date = from_date
-        self.until_date = until_date
         self.base_url = "https://api.brightdata.com/datasets/v3"
         self.headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -23,9 +21,7 @@ class TiktokPostDataFetcher:
         url = f"{self.base_url}/trigger"
         data = json.dumps([{
             "url": f"https://www.tiktok.com/@{self.tiktok_handle}/",
-            "num_of_posts": self.num_of_posts,
-            "from_date": self.from_date,
-            "until_date": self.until_date
+            "num_of_posts": self.num_of_posts
         }])
         params = {
             "dataset_id": "gd_lu702nij2f790tmv9h",
@@ -59,7 +55,6 @@ class TiktokPostDataFetcher:
 
         return None
 
-
     def parse_json_response(self, response):
         try:
             return json.loads(response)
@@ -86,15 +81,13 @@ class TiktokPostDataFetcher:
                 csv_writer.writerows(json_data)
 
 if __name__ == "__main__":
-    if len(sys.argv) < 6:
-        print("Usage: python script.py <tiktok_handle> <num_of_posts> <from_day> <from_month> <from_year>")
+    if len(sys.argv) < 3:
+        print("Usage: python script.py <tiktok_handle> <num_of_posts>")
         sys.exit(1)
     api_key = "7e4fe84a-14b3-4be5-b82c-4f2432600c58"
     tiktok_handle = sys.argv[1]
     num_of_posts = int(sys.argv[2])
-    from_date = ""
-    until_date = f"{sys.argv[3]} {sys.argv[4]} {sys.argv[5]}"
-    fetcher = TiktokPostDataFetcher(api_key, tiktok_handle, num_of_posts, from_date, until_date)
+    fetcher = TiktokPostDataFetcher(api_key, tiktok_handle, num_of_posts)
 
     response = fetcher.trigger_data_fetch()
     if response.status_code == 200:

@@ -1,0 +1,348 @@
+{
+    "input": {
+        "url": "https://www.tiktok.com/@humphreytalks"
+    },
+    "account_id": "humphreytalks",
+    "nickname": "Humphrey Yang",
+    "biography": "humphreytalks@gmail.com\nPersonal Finance / Investing\n1.3M YouTube / Templates \u2199\ufe0f",
+    "awg_engagement_rate": 0.005239125541125541,
+    "comment_engagement_rate": 0.00011861471861471862,
+    "like_engagement_rate": 0.0051205108225108225,
+    "bio_link": "https://beacons.ai/humphreytalks",
+    "predicted_lang": "en",
+    "is_verified": true,
+    "followers": 3300000,
+    "following": 418,
+    "likes": 53100000,
+    "videos_count": 977,
+    "id": "6717679036162425862",
+    "url": "https://www.tiktok.com/@humphreytalks",
+    "profile_pic_url": "https://p16-pu-sign-useast8.tiktokcdn-us.com/tos-useast5-avt-0068-tx/7312923100926967854~c5_720x720.jpeg?lk3s=a5d48078&nonce=43540&refresh_token=5a0a300e66a5fdb37cfc109a2867da17&x-expires=1722524400&x-signature=6KScPdowij75ZH5UghDZ01VZYYw%3D&shp=a5d48078&shcp=81f88b70",
+    "like_count": 53100000,
+    "digg_count": 0,
+    "is_private": false,
+    "profile_pic_url_hd": "https://p19-pu-sign-useast8.tiktokcdn-us.com/tos-useast5-avt-0068-tx/7312923100926967854~c5_1080x1080.jpeg?lk3s=a5d48078&nonce=92570&refresh_token=a0df1336491dd0a614f3aefa70dad185&x-expires=1722524400&x-signature=UtiLOFZWF%2BMt11raHjomGetYtqE%3D&shp=a5d48078&shcp=81f88b70",
+    "secu_id": "MS4wLjABAAAAldW_jmvx1C3b-oOV8SubsvqYF6R-Rgbeju1UmOFbDDTprGuQTdRqynG2OM4805eP",
+    "open_favorite": false,
+    "is_ad_virtual": false,
+    "region": "US",
+    "top_videos": [
+        {
+            "video_id": "6796564670481190150",
+            "share_count": 27600,
+            "playcount ": 2300000,
+            "diggcount ": 418200,
+            "commentcount": 17100,
+            "create_date": "2020-02-23T09:02:10.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/6796564670481190150"
+        },
+        {
+            "video_id": "7397119492511370526",
+            "share_count": 7,
+            "playcount ": 5360,
+            "diggcount ": 213,
+            "commentcount": 18,
+            "create_date": "2024-07-29T18:01:48.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7397119492511370526"
+        },
+        {
+            "video_id": "7395996482077199659",
+            "share_count": 428,
+            "playcount ": 33700,
+            "diggcount ": 2213,
+            "commentcount": 555,
+            "create_date": "2024-07-26T17:23:48.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7395996482077199659"
+        },
+        {
+            "video_id": "7395613690436848939",
+            "share_count": 13,
+            "playcount ": 18700,
+            "diggcount ": 717,
+            "commentcount": 85,
+            "create_date": "2024-07-25T16:38:21.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7395613690436848939"
+        },
+        {
+            "video_id": "7395272896148557098",
+            "share_count": 55,
+            "playcount ": 22600,
+            "diggcount ": 813,
+            "commentcount": 95,
+            "create_date": "2024-07-24T18:35:55.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7395272896148557098"
+        },
+        {
+            "video_id": "7394850176931826990",
+            "share_count": 262,
+            "playcount ": 23600,
+            "diggcount ": 1007,
+            "commentcount": 100,
+            "create_date": "2024-07-23T15:15:34.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7394850176931826990"
+        },
+        {
+            "video_id": "7394476281892572462",
+            "share_count": 81,
+            "playcount ": 52600,
+            "diggcount ": 2129,
+            "commentcount": 124,
+            "create_date": "2024-07-22T15:04:42.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7394476281892572462"
+        },
+        {
+            "video_id": "7393022049742032171",
+            "share_count": 4065,
+            "playcount ": 448400,
+            "diggcount ": 15000,
+            "commentcount": 1705,
+            "create_date": "2024-07-18T17:01:27.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7393022049742032171"
+        },
+        {
+            "video_id": "7392664988734786862",
+            "share_count": 57,
+            "playcount ": 292300,
+            "diggcount ": 11200,
+            "commentcount": 385,
+            "create_date": "2024-07-17T17:55:53.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7392664988734786862"
+        },
+        {
+            "video_id": "7392259600499739946",
+            "share_count": 27,
+            "playcount ": 33000,
+            "diggcount ": 1649,
+            "commentcount": 151,
+            "create_date": "2024-07-16T15:42:53.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7392259600499739946"
+        },
+        {
+            "video_id": "7391902031440661803",
+            "share_count": 1079,
+            "playcount ": 80300,
+            "diggcount ": 2609,
+            "commentcount": 200,
+            "create_date": "2024-07-15T16:35:22.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7391902031440661803"
+        },
+        {
+            "video_id": "7390772918407433514",
+            "share_count": 42,
+            "playcount ": 39000,
+            "diggcount ": 1430,
+            "commentcount": 211,
+            "create_date": "2024-07-12T15:33:43.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7390772918407433514"
+        },
+        {
+            "video_id": "7390118954909453610",
+            "share_count": 2525,
+            "playcount ": 727500,
+            "diggcount ": 44000,
+            "commentcount": 3073,
+            "create_date": "2024-07-10T21:16:05.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7390118954909453610"
+        },
+        {
+            "video_id": "7389665567877139755",
+            "share_count": 46,
+            "playcount ": 52500,
+            "diggcount ": 2050,
+            "commentcount": 48,
+            "create_date": "2024-07-09T15:56:41.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7389665567877139755"
+        },
+        {
+            "video_id": "7389308924106853678",
+            "share_count": 114,
+            "playcount ": 69400,
+            "diggcount ": 2976,
+            "commentcount": 111,
+            "create_date": "2024-07-08T16:52:41.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7389308924106853678"
+        },
+        {
+            "video_id": "7388191486245965098",
+            "share_count": 259,
+            "playcount ": 61000,
+            "diggcount ": 2889,
+            "commentcount": 1453,
+            "create_date": "2024-07-05T16:36:28.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7388191486245965098"
+        },
+        {
+            "video_id": "7387419384316235051",
+            "share_count": 64,
+            "playcount ": 74600,
+            "diggcount ": 2808,
+            "commentcount": 103,
+            "create_date": "2024-07-03T14:40:18.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7387419384316235051"
+        },
+        {
+            "video_id": "7386723639405661482",
+            "share_count": 249,
+            "playcount ": 242200,
+            "diggcount ": 2900,
+            "commentcount": 391,
+            "create_date": "2024-07-01T17:40:26.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7386723639405661482"
+        },
+        {
+            "video_id": "7385572860032552238",
+            "share_count": 59,
+            "playcount ": 90100,
+            "diggcount ": 4527,
+            "commentcount": 222,
+            "create_date": "2024-06-28T15:14:51.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7385572860032552238"
+        },
+        {
+            "video_id": "7385208694205730090",
+            "share_count": 628,
+            "playcount ": 202000,
+            "diggcount ": 5170,
+            "commentcount": 1020,
+            "create_date": "2024-06-27T15:41:45.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7385208694205730090"
+        },
+        {
+            "video_id": "7384850346214051115",
+            "share_count": 56,
+            "playcount ": 30000,
+            "diggcount ": 958,
+            "commentcount": 51,
+            "create_date": "2024-06-26T16:31:08.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7384850346214051115"
+        },
+        {
+            "video_id": "7384504919962799402",
+            "share_count": 63,
+            "playcount ": 879500,
+            "diggcount ": 833,
+            "commentcount": 119,
+            "create_date": "2024-06-25T18:10:41.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7384504919962799402"
+        },
+        {
+            "video_id": "7384105099674570026",
+            "share_count": 280,
+            "playcount ": 254500,
+            "diggcount ": 3514,
+            "commentcount": 452,
+            "create_date": "2024-06-24T16:19:12.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7384105099674570026"
+        },
+        {
+            "video_id": "7382607760162278702",
+            "share_count": 123,
+            "playcount ": 76600,
+            "diggcount ": 3259,
+            "commentcount": 93,
+            "create_date": "2024-06-20T15:28:45.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7382607760162278702"
+        },
+        {
+            "video_id": "7380412926789799211",
+            "share_count": 196,
+            "playcount ": 265200,
+            "diggcount ": 7736,
+            "commentcount": 247,
+            "create_date": "2024-06-14T17:31:39.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7380412926789799211"
+        },
+        {
+            "video_id": "7379720718562512171",
+            "share_count": 148,
+            "playcount ": 195300,
+            "diggcount ": 8891,
+            "commentcount": 187,
+            "create_date": "2024-06-12T20:45:32.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7379720718562512171"
+        },
+        {
+            "video_id": "7378875732694437163",
+            "share_count": 502,
+            "playcount ": 383700,
+            "diggcount ": 7903,
+            "commentcount": 656,
+            "create_date": "2024-06-10T14:06:38.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7378875732694437163"
+        },
+        {
+            "video_id": "7377479131463683370",
+            "share_count": 35,
+            "playcount ": 40500,
+            "diggcount ": 1515,
+            "commentcount": 79,
+            "create_date": "2024-06-06T19:46:59.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7377479131463683370"
+        },
+        {
+            "video_id": "7377404553043529003",
+            "share_count": 130,
+            "playcount ": 46700,
+            "diggcount ": 1693,
+            "commentcount": 91,
+            "create_date": "2024-06-06T14:57:37.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7377404553043529003"
+        },
+        {
+            "video_id": "7376325880919887147",
+            "share_count": 123,
+            "playcount ": 138400,
+            "diggcount ": 5908,
+            "commentcount": 232,
+            "create_date": "2024-06-03T17:11:49.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7376325880919887147"
+        },
+        {
+            "video_id": "7375568576201395502",
+            "share_count": 46,
+            "playcount ": 29700,
+            "diggcount ": 1250,
+            "commentcount": 81,
+            "create_date": "2024-06-01T16:13:05.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7375568576201395502"
+        },
+        {
+            "video_id": "7375204173630983467",
+            "share_count": 279,
+            "playcount ": 71100,
+            "diggcount ": 3094,
+            "commentcount": 190,
+            "create_date": "2024-05-31T16:39:01.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7375204173630983467"
+        },
+        {
+            "video_id": "7374484894908452138",
+            "share_count": 69,
+            "playcount ": 67700,
+            "diggcount ": 3347,
+            "commentcount": 173,
+            "create_date": "2024-05-29T18:07:50.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7374484894908452138"
+        },
+        {
+            "video_id": "7372592259251883310",
+            "share_count": 1206,
+            "playcount ": 458000,
+            "diggcount ": 15100,
+            "commentcount": 1326,
+            "create_date": "2024-05-24T15:43:27.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7372592259251883310"
+        },
+        {
+            "video_id": "7371954631250890027",
+            "share_count": 168,
+            "playcount ": 53500,
+            "diggcount ": 1918,
+            "commentcount": 160,
+            "create_date": "2024-05-22T22:29:06.000Z",
+            "video_url": "https://www.tiktok.com/@humphreytalks/video/7371954631250890027"
+        }
+    ],
+    "signature": "humphreytalks@gmail.com\nPersonal Finance / Investing\n1.3M YouTube / Templates \u2199\ufe0f",
+    "discovery_input": {}
+}
