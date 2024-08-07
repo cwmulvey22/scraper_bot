@@ -25,8 +25,8 @@ class YouTubeChannelDataFetcher:
         data = json.dumps([{
             "url": self.channel_url,
             "num_of_posts": self.num_of_posts,
-            "from_date": self.from_date,
-            "until_date": self.until_date
+            "start_date": self.from_date,
+            "end_date": self.until_date
         }])
         params = {
             "dataset_id": "gd_lk56epmy2i5g7lzu0k",
@@ -87,14 +87,14 @@ class YouTubeChannelDataFetcher:
                 csv_writer.writerows(json_data)
 
 if __name__ == "__main__":
-    if len(sys.argv) < 6:
+    if len(sys.argv) < 2:
         print("Usage: python script.py <channel_id> <num_of_posts> <from_day> <from_month> <from_year> <until_day> <until_month> <until_year>")
         sys.exit(1)
     api_key = "7e4fe84a-14b3-4be5-b82c-4f2432600c58"
     channel_id = sys.argv[1]
     num_of_posts = int(sys.argv[2])
-    from_date = f"{sys.argv[3]} {sys.argv[4]} {sys.argv[5]}"
-    until_date = f"{sys.argv[6]} {sys.argv[7]} {sys.argv[8]}"
+    from_date = ""
+    until_date = ""
     fetcher = YouTubeChannelDataFetcher(api_key, channel_id, num_of_posts, from_date, until_date)
 
     response = fetcher.trigger_data_fetch()
