@@ -37,7 +37,7 @@ class YouTubeChannelDataFetcher:
         }
         return requests.post(url, headers=self.headers, data=data, params=params)
 
-    def fetch_snapshot(self, snapshot_id, retries=20, delay=20):
+    def fetch_snapshot(self, snapshot_id, retries=20, delay=60):
         curl_command = f'curl -H "Authorization: Bearer {self.api_key}" "{self.base_url}/snapshot/{snapshot_id}?format=json"'
         for attempt in range(retries):
             result = subprocess.run(curl_command, shell=True, text=True, capture_output=True)
