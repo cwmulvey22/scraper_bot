@@ -26,7 +26,7 @@ class XComPostDataFetcher:
         }
         return requests.post(url, headers=self.headers, data=data, params=params)
 
-    def fetch_snapshot(self, snapshot_id, retries=20, delay=10):
+    def fetch_snapshot(self, snapshot_id, retries=30, delay=60):
         url = f"{self.base_url}/snapshot/{snapshot_id}"
         for attempt in range(retries):
             response = requests.get(url, headers=self.headers)
