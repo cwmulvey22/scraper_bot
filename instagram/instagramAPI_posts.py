@@ -10,7 +10,6 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
 load_dotenv()
 
 class InstagramPostDataFetcher:
@@ -77,10 +76,31 @@ class InstagramPostDataFetcher:
             return output.getvalue()
         return ""
 
+    def get_or_create_folder(self, drive_service, folder_name, parent_folder_id=None):
+        """Gets or creates a folder in Google Drive."""
+        query = f"name='{folder_name}' and mimeType='application/vnd.google-apps.folder'"
+        if parent_folder_id:
+            query += f" and '{parent_folder_id}' in parents"
+        
+        results = drive_service.files().list(q=query, fields="files(id, name)").execute()
+        items = results.get('files', [])
+        
+        if items:
+            return items[0]['id']
+        else:
+            file_metadata = {
+                'name': folder_name,
+                'mimeType': 'application/vnd.google-apps.folder'
+            }
+            if parent_folder_id:
+                file_metadata['parents'] = [parent_folder_id]
+            
+            folder = drive_service.files().create(body=file_metadata, fields='id').execute()
+            return folder.get('id')
+
     def upload_csv_to_drive(self, csv_content, filename, email):
         SCOPES = ['https://www.googleapis.com/auth/drive.file']
 
-        # Create a dictionary for the credentials using environment variables
         credentials_dict = {
             "type": os.getenv("GOOGLE_TYPE"),
             "project_id": os.getenv("GOOGLE_PROJECT_ID"),
@@ -98,7 +118,11 @@ class InstagramPostDataFetcher:
         credentials = Credentials.from_service_account_info(credentials_dict, scopes=SCOPES)
         drive_service = build('drive', 'v3', credentials=credentials)
 
-        file_metadata = {'name': filename}
+        folder_name = f'instagram_data_{self.instagram_handle}'
+        parent_folder_id = '1FUiSGG82YdbJjEjUOyZ2DbdyjifEfiHX'  # The shared folder ID
+        folder_id = self.get_or_create_folder(drive_service, folder_name, parent_folder_id)
+
+        file_metadata = {'name': filename, 'parents': [folder_id]}
         media = MediaIoBaseUpload(io.BytesIO(csv_content.encode('utf-8')), mimetype='text/csv')
         file = drive_service.files().create(body=file_metadata, media_body=media, fields='id').execute()
 
@@ -113,7 +137,7 @@ class InstagramPostDataFetcher:
             fields='id'
         ).execute()
 
-        print(f"File uploaded to Google Drive with ID: {file.get('id')}")
+        print(f"File uploaded to Google Drive in folder {folder_name} with ID: {file.get('id')}")
 
 if __name__ == "__main__":
     if len(sys.argv) < 4:

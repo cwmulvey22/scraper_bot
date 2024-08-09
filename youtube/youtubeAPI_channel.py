@@ -10,7 +10,6 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
 load_dotenv()
 
 class YouTubeChannelDataFetcher:
@@ -84,7 +83,7 @@ class YouTubeChannelDataFetcher:
             return output.getvalue()
         return ""
 
-    def upload_csv_to_drive(self, csv_content, filename):
+    def upload_csv_to_drive(self, csv_content, filename, shared_folder_id="1FUiSGG82YdbJjEjUOyZ2DbdyjifEfiHX"):
         SCOPES = ['https://www.googleapis.com/auth/drive.file']
         credentials_dict = {
             "type": os.getenv("GOOGLE_TYPE"),
@@ -103,7 +102,18 @@ class YouTubeChannelDataFetcher:
         credentials = Credentials.from_service_account_info(credentials_dict, scopes=SCOPES)
         drive_service = build('drive', 'v3', credentials=credentials)
 
-        file_metadata = {'name': filename}
+        folder_metadata = {
+            'name': filename.split('.')[0],  
+            'mimeType': 'application/vnd.google-apps.folder',
+            'parents': [shared_folder_id]  
+        }
+        folder = drive_service.files().create(body=folder_metadata, fields='id').execute()
+        new_folder_id = folder.get('id')
+
+        file_metadata = {
+            'name': filename,
+            'parents': [new_folder_id]  
+        }
         media = MediaIoBaseUpload(io.BytesIO(csv_content.encode('utf-8')), mimetype='text/csv')
         file = drive_service.files().create(body=file_metadata, media_body=media, fields='id').execute()
 
@@ -118,7 +128,7 @@ class YouTubeChannelDataFetcher:
             fields='id'
         ).execute()
 
-        print(f"File uploaded to Google Drive with ID: {file.get('id')}")
+        print(f"File uploaded to Google Drive in folder with ID: {new_folder_id}, File ID: {file.get('id')}")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
