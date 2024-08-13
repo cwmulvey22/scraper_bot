@@ -1,3 +1,4 @@
+# Assuming the first script is named youtubeAPI_profile.py
 import requests
 import json
 import time
@@ -60,7 +61,7 @@ class YouTubeProfileDataFetcher:
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python script.py <youtube_handle>")
+        print("Usage: python youtubeAPI_profile.py <youtube_handle>")
         sys.exit(1)
     api_key = "7e4fe84a-14b3-4be5-b82c-4f2432600c58"
     youtube_handle = sys.argv[1]
@@ -81,6 +82,12 @@ if __name__ == "__main__":
                 csv_file = f'output/youtube_{youtube_handle}/about.csv'
                 fetcher.save_json(data, json_file)
                 fetcher.json_to_csv(data, csv_file)
+                
+                # Print the id to pass to the second script
+                if "id" in data:
+                    print(data["id"])  # This is the channel_id to pass to the second script
+                else:
+                    print("ID not found in the data.")
             else:
                 print("Failed to fetch snapshot data:", snapshot_response.status_code, snapshot_response.text)
         else:
