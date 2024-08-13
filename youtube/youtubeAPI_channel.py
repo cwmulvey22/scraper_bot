@@ -5,6 +5,7 @@ import time
 import csv
 import sys
 import io
+import pandas as pd
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
@@ -49,10 +50,8 @@ class YouTubeChannelDataFetcher:
         for attempt in range(retries):
             try:
                 response = requests.get(url, headers=self.headers)
-                response.raise_for_status()  
+                response.raise_for_status()
                 response_data = response.json()
-                
-
                 if isinstance(response_data, list) and response_data and 'views' in response_data[0]:
                     print("Snapshot data is ready.")
                     return response_data
@@ -73,7 +72,6 @@ class YouTubeChannelDataFetcher:
                 file.write('\n')
 
     def json_to_csv(self, json_data):
-        """Converts a list of dictionaries to a CSV file content."""
         if json_data:
             keys = json_data[0].keys()
             output = io.StringIO()
@@ -84,7 +82,7 @@ class YouTubeChannelDataFetcher:
         return ""
 
     def upload_csv_to_drive(self, csv_content, filename, shared_folder_id="1FUiSGG82YdbJjEjUOyZ2DbdyjifEfiHX"):
-        SCOPES = ['https://www.googleapis.com/auth/drive.file']
+        SCOPES = ['https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/spreadsheets']
         credentials_dict = {
             "type": os.getenv("GOOGLE_TYPE"),
             "project_id": os.getenv("GOOGLE_PROJECT_ID"),
@@ -101,34 +99,87 @@ class YouTubeChannelDataFetcher:
 
         credentials = Credentials.from_service_account_info(credentials_dict, scopes=SCOPES)
         drive_service = build('drive', 'v3', credentials=credentials)
+        sheets_service = build('sheets', 'v4', credentials=credentials)
 
-        folder_metadata = {
-            'name': filename.split('.')[0],  
-            'mimeType': 'application/vnd.google-apps.folder',
-            'parents': [shared_folder_id]  
-        }
-        folder = drive_service.files().create(body=folder_metadata, fields='id').execute()
-        new_folder_id = folder.get('id')
+        # Check if the folder already exists
+        folder_name = filename.split('.')[0]
+        query = f"'{shared_folder_id}' in parents and mimeType = 'application/vnd.google-apps.folder' and name = '{folder_name}'"
+        folders = drive_service.files().list(q=query, fields='files(id, name)').execute().get('files', [])
+        
+        if folders:
+            folder_id = folders[0]['id']
+        else:
+            folder_metadata = {
+                'name': folder_name,
+                'mimeType': 'application/vnd.google-apps.folder',
+                'parents': [shared_folder_id]  
+            }
+            folder = drive_service.files().create(body=folder_metadata, fields='id').execute()
+            folder_id = folder.get('id')
 
-        file_metadata = {
-            'name': filename,
-            'parents': [new_folder_id]  
-        }
-        media = MediaIoBaseUpload(io.BytesIO(csv_content.encode('utf-8')), mimetype='text/csv')
-        file = drive_service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+        # Check if the CSV file exists in the folder
+        query = f"'{folder_id}' in parents and mimeType = 'application/vnd.google-apps.spreadsheet' and name = '{filename}'"
+        files = drive_service.files().list(q=query, fields='files(id, name)').execute().get('files', [])
 
-        permissions = {
-            'type': 'user',
-            'role': 'writer',
-            'emailAddress': 'hitesh@sute.app'
-        }
-        drive_service.permissions().create(
-            fileId=file.get('id'),
-            body=permissions,
-            fields='id'
-        ).execute()
+        if files:
+            spreadsheet_id = files[0]['id']
 
-        print(f"File uploaded to Google Drive in folder with ID: {new_folder_id}, File ID: {file.get('id')}")
+            # Get the list of existing sheets
+            spreadsheet = sheets_service.spreadsheets().get(spreadsheetId=spreadsheet_id).execute()
+            existing_sheets = [sheet['properties']['title'] for sheet in spreadsheet.get('sheets', [])]
+
+            # Generate a unique sheet name
+            base_sheet_name = f"{folder_name}_data"
+            sheet_name = base_sheet_name
+            i = 1
+            while sheet_name in existing_sheets:
+                sheet_name = f"{base_sheet_name}_{i}"
+                i += 1
+
+            # Create the new sheet
+            add_sheet_request = {
+                'requests': [
+                    {
+                        'addSheet': {
+                            'properties': {
+                                'title': sheet_name
+                            }
+                        }
+                    }
+                ]
+            }
+            sheets_service.spreadsheets().batchUpdate(spreadsheetId=spreadsheet_id, body=add_sheet_request).execute()
+
+            # Convert CSV content to a list of rows
+            csv_rows = list(csv.reader(io.StringIO(csv_content)))
+
+            # Prepare data to be inserted
+            data = {
+                'range': f"{sheet_name}!A1",
+                'majorDimension': 'ROWS',
+                'values': csv_rows
+            }
+
+            # Insert data into the newly created sheet
+            sheets_service.spreadsheets().values().update(
+                spreadsheetId=spreadsheet_id,
+                range=f"{sheet_name}!A1",
+                valueInputOption="RAW",
+                body=data
+            ).execute()
+        else:
+            # CSV doesn't exist, create a new file and upload
+            file_metadata = {
+                'name': filename,
+                'parents': [folder_id],
+                'mimeType': 'application/vnd.google-apps.spreadsheet'
+            }
+            media = MediaIoBaseUpload(io.BytesIO(csv_content.encode('utf-8')), mimetype='text/csv')
+            file = drive_service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+            spreadsheet_id = file.get('id')
+
+            print(f"File uploaded to Google Drive in folder with ID: {folder_id}, File ID: {spreadsheet_id}")
+
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
