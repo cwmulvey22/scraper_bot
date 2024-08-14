@@ -1,14 +1,12 @@
 import os
+import sys
 import requests
 import json
 import time
 import csv
-import sys
 import io
-import pandas as pd
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
-from googleapiclient.http import MediaIoBaseUpload
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -81,8 +79,31 @@ class YouTubeChannelDataFetcher:
             return output.getvalue()
         return ""
 
-    def upload_csv_to_drive(self, csv_content, filename, shared_folder_id="1FUiSGG82YdbJjEjUOyZ2DbdyjifEfiHX"):
-        SCOPES = ['https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/spreadsheets']
+    def get_or_create_folder(self, drive_service, folder_name, parent_folder_id=None):
+        """Gets or creates a folder in Google Drive."""
+        query = f"name='{folder_name}' and mimeType='application/vnd.google-apps.folder'"
+        if parent_folder_id:
+            query += f" and '{parent_folder_id}' in parents"
+        
+        results = drive_service.files().list(q=query, fields="files(id, name)").execute()
+        items = results.get('files', [])
+
+        if items:
+            return items[0]['id']
+        else:
+            file_metadata = {
+                'name': folder_name,
+                'mimeType': 'application/vnd.google-apps.folder'
+            }
+            if parent_folder_id:
+                file_metadata['parents'] = [parent_folder_id]
+            
+            folder = drive_service.files().create(body=file_metadata, fields='id').execute()
+            return folder.get('id')
+
+    def upload_csv_to_drive(self, csv_content, filename):
+        SCOPES = ['https://www.googleapis.com/auth/drive.file']
+
         credentials_dict = {
             "type": os.getenv("GOOGLE_TYPE"),
             "project_id": os.getenv("GOOGLE_PROJECT_ID"),
@@ -101,97 +122,105 @@ class YouTubeChannelDataFetcher:
         drive_service = build('drive', 'v3', credentials=credentials)
         sheets_service = build('sheets', 'v4', credentials=credentials)
 
-        # Check if the folder already exists
-        folder_name = filename.split('.')[0]
-        query = f"'{shared_folder_id}' in parents and mimeType = 'application/vnd.google-apps.folder' and name = '{folder_name}'"
-        folders = drive_service.files().list(q=query, fields='files(id, name)').execute().get('files', [])
-        
-        if folders:
-            folder_id = folders[0]['id']
-        else:
-            folder_metadata = {
-                'name': folder_name,
-                'mimeType': 'application/vnd.google-apps.folder',
-                'parents': [shared_folder_id]  
-            }
-            folder = drive_service.files().create(body=folder_metadata, fields='id').execute()
-            folder_id = folder.get('id')
+        folder_name = f'youtube_data_{self.channel_id}'
+        parent_folder_id = '1FUiSGG82YdbJjEjUOyZ2DbdyjifEfiHX'  # The shared folder ID
+        folder_id = self.get_or_create_folder(drive_service, folder_name, parent_folder_id)
 
-        # Check if the CSV file exists in the folder
-        query = f"'{folder_id}' in parents and mimeType = 'application/vnd.google-apps.spreadsheet' and name = '{filename}'"
-        files = drive_service.files().list(q=query, fields='files(id, name)').execute().get('files', [])
+        query = f"name='{filename}' and '{folder_id}' in parents"
+        results = drive_service.files().list(q=query, fields="files(id)").execute()
+        items = results.get('files', [])
 
-        if files:
-            spreadsheet_id = files[0]['id']
+        if items:
+            # File exists, add a new sheet
+            spreadsheet_id = items[0]['id']
+            sheet_title = f'{self.channel_id}_data_{int(time.time())}'
 
-            # Get the list of existing sheets
-            spreadsheet = sheets_service.spreadsheets().get(spreadsheetId=spreadsheet_id).execute()
-            existing_sheets = [sheet['properties']['title'] for sheet in spreadsheet.get('sheets', [])]
-
-            # Generate a unique sheet name
-            base_sheet_name = f"{folder_name}_data"
-            sheet_name = base_sheet_name
-            i = 1
-            while sheet_name in existing_sheets:
-                sheet_name = f"{base_sheet_name}_{i}"
-                i += 1
-
-            # Create the new sheet
+            # Add new sheet
             add_sheet_request = {
-                'requests': [
-                    {
-                        'addSheet': {
-                            'properties': {
-                                'title': sheet_name
-                            }
+                'requests': [{
+                    'addSheet': {
+                        'properties': {
+                            'title': sheet_title,
                         }
                     }
-                ]
+                }]
             }
+
             sheets_service.spreadsheets().batchUpdate(spreadsheetId=spreadsheet_id, body=add_sheet_request).execute()
 
-            # Convert CSV content to a list of rows
-            csv_rows = list(csv.reader(io.StringIO(csv_content)))
-
-            # Prepare data to be inserted
-            data = {
-                'range': f"{sheet_name}!A1",
-                'majorDimension': 'ROWS',
-                'values': csv_rows
+            # Write data to new sheet
+            body = {
+                'values': [row.split(',') for row in csv_content.strip().split('\n')]
             }
-
-            # Insert data into the newly created sheet
             sheets_service.spreadsheets().values().update(
                 spreadsheetId=spreadsheet_id,
-                range=f"{sheet_name}!A1",
-                valueInputOption="RAW",
-                body=data
+                range=f'{sheet_title}!A1',
+                valueInputOption='RAW',
+                body=body
             ).execute()
+
         else:
-            # CSV doesn't exist, create a new file and upload
-            file_metadata = {
-                'name': filename,
-                'parents': [folder_id],
-                'mimeType': 'application/vnd.google-apps.spreadsheet'
+            # File does not exist, create a new spreadsheet
+            spreadsheet = {
+                'properties': {
+                    'title': filename
+                },
+                'sheets': [{
+                    'properties': {
+                        'title': 'Sheet1'
+                    }
+                }]
             }
-            media = MediaIoBaseUpload(io.BytesIO(csv_content.encode('utf-8')), mimetype='text/csv')
-            file = drive_service.files().create(body=file_metadata, media_body=media, fields='id').execute()
-            spreadsheet_id = file.get('id')
 
-            print(f"File uploaded to Google Drive in folder with ID: {folder_id}, File ID: {spreadsheet_id}")
+            spreadsheet = sheets_service.spreadsheets().create(body=spreadsheet, fields='spreadsheetId').execute()
+            spreadsheet_id = spreadsheet.get('spreadsheetId')
 
+            # Move the spreadsheet to the folder
+            drive_service.files().update(
+                fileId=spreadsheet_id,
+                addParents=folder_id,
+                removeParents='root',
+                fields='id, parents'
+            ).execute()
+
+            # Write data to the first sheet
+            body = {
+                'values': [row.split(',') for row in csv_content.strip().split('\n')]
+            }
+            sheets_service.spreadsheets().values().update(
+                spreadsheetId=spreadsheet_id,
+                range='Sheet1!A1',
+                valueInputOption='RAW',
+                body=body
+            ).execute()
+
+        # Set permissions for the file
+        permissions = {
+            'type': 'user',
+            'role': 'writer',
+            'emailAddress': "hitesh@sute.app"
+        }
+        drive_service.permissions().create(
+            fileId=spreadsheet_id,
+            body=permissions,
+            fields='id'
+        ).execute()
+
+        print(f"Data uploaded to Google Sheets with ID: {spreadsheet_id}")
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python script.py <channel_id> <num_of_posts> <from_day> <from_month> <from_year> <until_day> <until_month> <until_year>")
+    if len(sys.argv) < 4:
+        print("Usage: python script.py <channel_id> <num_of_posts> <your_email>")
         sys.exit(1)
     api_key = "7e4fe84a-14b3-4be5-b82c-4f2432600c58"
     channel_id = sys.argv[1]
     youtube_handle=sys.argv[2]
     num_of_posts = int(sys.argv[3])
-    from_date = ""
-    until_date = ""
-    fetcher = YouTubeChannelDataFetcher(api_key, channel_id, num_of_posts, from_date, until_date)
+    # email = sys.argv[3]
+    from_date = sys.argv[4] if len(sys.argv) > 4 else None
+    until_date = sys.argv[5] if len(sys.argv) > 5 else None
+
+    fetcher = YouTubeChannelDataFetcher(api_key, youtube_handle, num_of_posts, from_date, until_date)
 
     response = fetcher.trigger_data_fetch()
     if response.status_code == 200:
@@ -200,15 +229,11 @@ if __name__ == "__main__":
         if snapshot_info and 'snapshot_id' in snapshot_info:
             snapshot_id = snapshot_info['snapshot_id']
             print("Snapshot ID is: ", snapshot_id)
-            snapshot_data = fetcher.fetch_snapshot("s_lzsn0mc812imepy62t")
+            snapshot_data = fetcher.fetch_snapshot(snapshot_id)
             if snapshot_data:
                 print("Snapshot data fetched successfully:")
                 csv_content = fetcher.json_to_csv(snapshot_data)
-                fetcher.upload_csv_to_drive(csv_content, f'youtube_channel_{youtube_handle}_data.csv')
-                print("Data processing and upload completed successfully.")
-            else:
-                print("Failed to fetch snapshot data.")
-        else:
-            print("Snapshot ID not found in response.")
+                filename = f'youtube_channel_{youtube_handle}_data'
+                fetcher.upload_csv_to_drive(csv_content, filename)
     else:
-        print("Failed to trigger snapshot:", response.status_code, response.text)
+        print("Error triggering snapshot:", response.status_code, response.text)
