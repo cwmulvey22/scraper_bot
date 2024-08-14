@@ -187,7 +187,8 @@ if __name__ == "__main__":
         sys.exit(1)
     api_key = "7e4fe84a-14b3-4be5-b82c-4f2432600c58"
     channel_id = sys.argv[1]
-    num_of_posts = int(sys.argv[2])
+    youtube_handle=sys.argv[2]
+    num_of_posts = int(sys.argv[3])
     from_date = ""
     until_date = ""
     fetcher = YouTubeChannelDataFetcher(api_key, channel_id, num_of_posts, from_date, until_date)
@@ -199,11 +200,11 @@ if __name__ == "__main__":
         if snapshot_info and 'snapshot_id' in snapshot_info:
             snapshot_id = snapshot_info['snapshot_id']
             print("Snapshot ID is: ", snapshot_id)
-            snapshot_data = fetcher.fetch_snapshot(snapshot_id)
+            snapshot_data = fetcher.fetch_snapshot("s_lzsn0mc812imepy62t")
             if snapshot_data:
                 print("Snapshot data fetched successfully:")
                 csv_content = fetcher.json_to_csv(snapshot_data)
-                fetcher.upload_csv_to_drive(csv_content, f'youtube_channel_{channel_id}_data.csv')
+                fetcher.upload_csv_to_drive(csv_content, f'youtube_channel_{youtube_handle}_data.csv')
                 print("Data processing and upload completed successfully.")
             else:
                 print("Failed to fetch snapshot data.")

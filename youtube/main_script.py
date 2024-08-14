@@ -9,7 +9,7 @@ def main(youtube_handle, num_of_posts, from_date=None, until_date=None):
     channel_id = result.stdout.strip().split()[-1]  # Assuming the ID is at the end of the output
     print('result==',channel_id)
     # Prepare the command for the second script
-    command = ['python', 'youtubeAPI_channel.py', channel_id, str(num_of_posts)]
+    command = ['python', 'youtubeAPI_channel.py', channel_id, youtube_handle, str(num_of_posts)]
     if from_date:
         command.append(from_date)
     if until_date:
