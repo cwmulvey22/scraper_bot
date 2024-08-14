@@ -65,13 +65,29 @@ class InstagramPostDataFetcher:
                 file.write('\n')
 
     def json_to_csv(self, json_data):
-        """Converts a list of dictionaries to a CSV file content."""
         if json_data:
-            keys = json_data[0].keys()
+            sanitized_data = []
+            for entry in json_data:
+                sanitized_entry = {}
+                for k, v in entry.items():
+                    if isinstance(v, list):
+                        sanitized_list = []
+                        for item in v:
+                            if isinstance(item, dict): 
+                                sanitized_list.append(json.dumps(item)) 
+                            else:
+                                sanitized_list.append(str(item))
+                        v = ' '.join(sanitized_list).replace(',', ' ').replace('\n', ' ')
+                    elif isinstance(v, str):  
+                        v = v.replace('\n', ' ').replace(',', ' ')
+                    sanitized_entry[k] = v
+                sanitized_data.append(sanitized_entry)
+
+            keys = sanitized_data[0].keys()
             output = io.StringIO()
-            csv_writer = csv.DictWriter(output, fieldnames=keys)
+            csv_writer = csv.DictWriter(output, fieldnames=keys, quoting=csv.QUOTE_MINIMAL)
             csv_writer.writeheader()
-            csv_writer.writerows(json_data)
+            csv_writer.writerows(sanitized_data)
             return output.getvalue()
         return ""
 
@@ -222,6 +238,8 @@ if __name__ == "__main__":
             snapshot_id = snapshot_info['snapshot_id']
             print("Snapshot ID is: ", snapshot_id)
             snapshot_data = fetcher.fetch_snapshot(snapshot_id)
+            
+            # snapshot_data = fetcher.fetch_snapshot("s_lzr3si8nuilufqv4w")
             if snapshot_data:
                 print("Snapshot data fetched successfully:")
                 csv_content = fetcher.json_to_csv(snapshot_data)
