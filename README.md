@@ -18,49 +18,30 @@ Below are instructions on how to run the scripts for each platform. Ensure that 
 ### YouTube
 Navigate to the youTube/ directory to run these scripts.
 
-#### Profile Scraping
+#### Profile & Posts Scraping 
 ```
-python youtubeAPI_profile.py <name_of_the_handle>
-```
-
-#### Example
-```
-python youtubeAPI_profile.py MrBeast
-```
-
-#### Channel Scraping
-```
-python youtubeAPI_channel.py <channel_id> <number_of_posts> <from_day> <from_month> <from_year> <until_day> <until_month> <until_year>
+python youtubeAPI_profile.py <name_of_the_handle> <no_of_posts>
 ```
 
 #### Example
 ```
-python youtubeAPI_channel.py UCyaN6mg5u8Cjy2ZI4ikWaug 4 08 05 2024 07 01 2024
+python youtubeAPI_profile.py MrBeast 10
 ```
-Note: Ensure the from date is always before the until date.
+
 
 ### Instagram
 Navigate to the instagram/ directory to run these scripts.
 
-#### Profile Scraping
+#### Profile  & Posts Scraping
 ```
-python instagramAPI_profile.py <instagram_handle>
-```
-
-#### Example
-```
-python instagramAPI_profile.py retirewithryne
-```
-
-#### Posts Scraping
-```
-python instagramAPI_posts.py <instagram_handle> <number_of_posts> <from_day> <from_month> <from_year>
+python instagramAPI_profile.py <instagram_handle> <no_of_posts>
 ```
 
 #### Example
 ```
-python instagramAPI_posts.py semrush 10 07 01 2024
+python instagramAPI_profile.py retirewithryne 10
 ```
+
 
 ### TikTok
 Navigate to the tikTok/ directory to run these scripts.

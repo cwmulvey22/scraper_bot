@@ -113,7 +113,7 @@ class InstagramPostDataFetcher:
             folder = drive_service.files().create(body=file_metadata, fields='id').execute()
             return folder.get('id')
 
-    def upload_csv_to_drive(self, csv_content, filename, email):
+    def upload_csv_to_drive(self, csv_content, filename):
         SCOPES = ['https://www.googleapis.com/auth/drive.file']
 
         credentials_dict = {
@@ -210,7 +210,7 @@ class InstagramPostDataFetcher:
         permissions = {
             'type': 'user',
             'role': 'writer',
-            'emailAddress': email
+            'emailAddress': "hitesh@sute.app"
         }
         drive_service.permissions().create(
             fileId=spreadsheet_id,
@@ -221,13 +221,13 @@ class InstagramPostDataFetcher:
         print(f"Data uploaded to Google Sheets with ID: {spreadsheet_id}")
 
 if __name__ == "__main__":
-    if len(sys.argv) < 4:
-        print("Usage: python script.py <instagram_handle> <num_of_posts> <your_email>")
+    if len(sys.argv) < 3:
+        print("Usage: python script.py <instagram_handle> <num_of_posts>")
         sys.exit(1)
     api_key = "7e4fe84a-14b3-4be5-b82c-4f2432600c58"
     instagram_handle = sys.argv[1]
     num_of_posts = int(sys.argv[2])
-    email = sys.argv[3]
+    # email = sys.argv[3]
     fetcher = InstagramPostDataFetcher(api_key, instagram_handle, num_of_posts)
 
     response = fetcher.trigger_data_fetch()
@@ -237,14 +237,14 @@ if __name__ == "__main__":
         if snapshot_info and 'snapshot_id' in snapshot_info:
             snapshot_id = snapshot_info['snapshot_id']
             print("Snapshot ID is: ", snapshot_id)
-            snapshot_data = fetcher.fetch_snapshot(snapshot_id)
+            # snapshot_data = fetcher.fetch_snapshot(snapshot_id)
             
-            # snapshot_data = fetcher.fetch_snapshot("s_lzr3si8nuilufqv4w")
+            snapshot_data = fetcher.fetch_snapshot("s_lzr3si8nuilufqv4w")
             if snapshot_data:
                 print("Snapshot data fetched successfully:")
                 csv_content = fetcher.json_to_csv(snapshot_data)
-                filename = f'instagram_post_{instagram_handle}_data'
-                fetcher.upload_csv_to_drive(csv_content, filename, email)
+                filename = f'instagram_{instagram_handle}_data'
+                fetcher.upload_csv_to_drive(csv_content, filename)
                 print("Data processing and upload completed successfully.")
             else:
                 print("Failed to fetch snapshot data.")
