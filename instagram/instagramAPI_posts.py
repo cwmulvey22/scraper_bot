@@ -237,9 +237,9 @@ if __name__ == "__main__":
         if snapshot_info and 'snapshot_id' in snapshot_info:
             snapshot_id = snapshot_info['snapshot_id']
             print("Snapshot ID is: ", snapshot_id)
-            # snapshot_data = fetcher.fetch_snapshot(snapshot_id)
+            snapshot_data = fetcher.fetch_snapshot(snapshot_id)
             
-            snapshot_data = fetcher.fetch_snapshot("s_lzr3si8nuilufqv4w")
+            # snapshot_data = fetcher.fetch_snapshot("s_lzr3si8nuilufqv4w")
             if snapshot_data:
                 print("Snapshot data fetched successfully:")
                 csv_content = fetcher.json_to_csv(snapshot_data)
